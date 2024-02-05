@@ -28,30 +28,14 @@ class Event:
     def draw_name_for(self, player: Player):
         if player.drawn_name is None:
             remaining_names = [p for p in self.drawing_bucket if p != player]
+            participants_left = [p for p in self.participants if p.drawn_name is None]
             if len(remaining_names) == 2:
-                only_choice = []
-                participants_left = []
-                for p in self.participants:
-                    if p.drawn_name is None:
-                        participants_left.append(p)
-                for n in remaining_names:
-                    if n in participants_left:
-                        only_choice.append(n)
-                if only_choice:
-                    player.drawn_name = only_choice[0]
-                    self.drawing_bucket.remove(player.drawn_name)
-                else:
-                    player.drawn_name = random.choice(remaining_names)
-                    self.drawing_bucket.remove(player.drawn_name)
-
-            elif not remaining_names:
-                print("[INFO] No one left but you")
-                player.drawn_name = player
+                only_choice = [n for n in remaining_names if n in participants_left]
+                # In case of 2 only choices, doesn't matter which to pick
+                player.drawn_name = only_choice[0] if only_choice else random.choice(remaining_names)
             else:
                 player.drawn_name = random.choice(remaining_names)
-                self.drawing_bucket.remove(player.drawn_name)
-        else:
-            pass
+            self.drawing_bucket.remove(player.drawn_name)
 
     def reset_draw_for(self, player: Player):
         self.drawing_bucket.append(player.drawn_name)
