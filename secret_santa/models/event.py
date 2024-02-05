@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import datetime
 import random
 
-from models.player import Player
+from secret_santa.models.player import Player
 
 
 @dataclass
@@ -38,5 +38,6 @@ class Event:
             self.drawing_bucket.remove(player.drawn_name)
 
     def reset_draw_for(self, player: Player):
-        self.drawing_bucket.append(player.drawn_name)
-        player.drawn_name = None
+        if player.drawn_name is not None:
+            self.drawing_bucket.append(player.drawn_name)
+            player.drawn_name = None

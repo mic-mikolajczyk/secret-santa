@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from models.gift import Gift
+from secret_santa.models.gift import Gift
 
 
 @dataclass
