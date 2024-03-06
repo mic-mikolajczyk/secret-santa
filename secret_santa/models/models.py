@@ -17,16 +17,16 @@ class Gift(BaseModel):
     price: float | None = None
 
 
-class Player(BaseModel):
+class Participant(BaseModel):
     name: str
-    drawn_name: Optional['Player'] = None
+    drawn_name: Optional['Participant'] = None
     whish_list: list[Gift] = Field(default_factory=list)
 
 
 class Event(BaseModel):
     name: str
     event_id: str | None = None
-    participants: list[Player] = Field(default_factory=list)
-    drawing_bucket: list[Player] = Field(default_factory=list)
+    participants: list[Participant] = Field(default_factory=list)
+    drawing_bucket: list[Participant] = Field(default_factory=list)
     date: datetime.datetime | None = None
     target_gift_price: float | None = None

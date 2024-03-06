@@ -1,30 +1,19 @@
-from secret_santa.models.event import Event
+from secret_santa.event_manager import EventManager
+from secret_santa.models.models import Event, User
 
 MAIN_PARTY = "Christmas 2023"
 
 christmas_party = Event(name=MAIN_PARTY)
-
-mic = christmas_party.add_participant("mic")
-ania = christmas_party.add_participant("Ania")
-mama = christmas_party.add_participant("Mama")
-tata = christmas_party.add_participant("Tata")
-asia = christmas_party.add_participant("Asia")
+event_manager = EventManager(christmas_party)
 
 
-for _ in range(100):
-    christmas_party.draw_name_for(mic)
-    christmas_party.draw_name_for(ania)
-    christmas_party.draw_name_for(mama)
-    christmas_party.draw_name_for(tata)
-    christmas_party.draw_name_for(asia)
+event_manager.assign_user_
 
-    for participant in christmas_party.participants:
-        print(f"DRAWN NAME FOR {participant.name}: {participant.drawn_name.name}")
-        assert participant.name != participant.drawn_name.name
-    print()
+mic = event_manager.add_participant("mic")
+ania = event_manager.add_participant("Ania")
+mama = event_manager.add_participant("Mama")
+tata = event_manager.add_participant("Tata")
+asia = event_manager.add_participant("Asia")
 
-    christmas_party.reset_draw_for(mic)
-    christmas_party.reset_draw_for(ania)
-    christmas_party.reset_draw_for(mama)
-    christmas_party.reset_draw_for(tata)
-    christmas_party.reset_draw_for(asia)
+event_manager.draw_name_for(mama)
+print(mama)
