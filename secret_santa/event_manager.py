@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from secret_santa.models.models import Event, Participant
+from secret_santa.models.models import Event, Participant, User
 
 
 class EventManager:
@@ -19,6 +19,20 @@ class EventManager:
         self.event.participants.append(new_participant)
         self.event.drawing_bucket.append(new_participant)
         return new_participant
+
+    @staticmethod
+    def assign_user(user: User, participant: Participant):
+        if participant.user is None:
+            participant.user = user
+        else:
+            raise ValueError("User already assign")
+
+    @staticmethod
+    def unassign_user(participant: Participant):
+        if participant.user is not None:
+            participant.user = None
+        else:
+            raise ValueError("User has not been assigned")
 
     def draw_name_for(self, participant: Participant):
         if participant.drawn_name is None:

@@ -1,17 +1,26 @@
-from secret_santa.event_manager import EventManager
-from secret_santa.models.models import Event
+from secret_santa.app_manager import AppManager
+
 
 MAIN_PARTY = "Christmas 2023"
 
-christmas_party = Event(name=MAIN_PARTY)
-event_manager = EventManager(christmas_party)
+app_manager = AppManager()
+
+user_1 = app_manager.create_user(
+    email="user1@mail.com",
+    name="some-user",
+    password="super-secret"
+)
 
 
-mic = event_manager.add_participant("mic")
-ania = event_manager.add_participant("Ania")
-mama = event_manager.add_participant("Mama")
-tata = event_manager.add_participant("Tata")
-asia = event_manager.add_participant("Asia")
+christmas_party_manager = AppManager.create_event(name=MAIN_PARTY)
 
-event_manager.draw_name_for(mama)
+mic = christmas_party_manager.add_participant("mic")
+ania = christmas_party_manager.add_participant("Ania")
+mama = christmas_party_manager.add_participant("Mama")
+tata = christmas_party_manager.add_participant("Tata")
+asia = christmas_party_manager.add_participant("Asia")
+
+christmas_party_manager.assign_user(user_1, mama)
+
+christmas_party_manager.draw_name_for(mama)
 print(mama)

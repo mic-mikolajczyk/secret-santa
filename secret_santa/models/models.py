@@ -1,12 +1,13 @@
 import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr, SecretStr, UUID4
 
 
 class User(BaseModel):
-    email: str
-    password: str
+    email: EmailStr
+    password: SecretStr
+    uuid: UUID4
     name: str | None = None
     events: list['Event'] = Field(default_factory=list)
 
@@ -19,6 +20,7 @@ class Gift(BaseModel):
 
 class Participant(BaseModel):
     name: str
+    user: User | None = None
     drawn_name: Optional['Participant'] = None
     whish_list: list[Gift] = Field(default_factory=list)
 
@@ -30,3 +32,4 @@ class Event(BaseModel):
     drawing_bucket: list[Participant] = Field(default_factory=list)
     date: datetime.datetime | None = None
     target_gift_price: float | None = None
+    uuid: UUID4 = None
