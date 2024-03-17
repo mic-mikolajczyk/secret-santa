@@ -8,11 +8,17 @@ app_manager = AppManager()
 user_1 = app_manager.create_user(
     email="user1@mail.com",
     name="some-user",
-    password="super-secret"
+    password="super-secret-123!@#"
 )
 
+token = app_manager.login(
+    email="user1@mail.com",
+    password="super-secret-123!@#"
+)
+print(token)
 
-christmas_party_manager = AppManager.create_event(name=MAIN_PARTY)
+christmas_party_manager = app_manager.create_event(name=MAIN_PARTY)
+app_manager.list_events()
 
 mic = christmas_party_manager.add_participant("mic")
 ania = christmas_party_manager.add_participant("Ania")

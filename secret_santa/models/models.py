@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, EmailStr, SecretStr, UUID4
 
 class User(BaseModel):
     email: EmailStr
-    password: SecretStr
+    password: SecretStr | bytes
     uuid: UUID4
     name: str | None = None
     events: list['Event'] = Field(default_factory=list)

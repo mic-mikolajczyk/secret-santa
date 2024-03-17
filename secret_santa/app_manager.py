@@ -1,3 +1,5 @@
+import hashlib
+from hmac import compare_digest
 import uuid
 import secrets
 from secret_santa.event_manager import EventManager
@@ -15,7 +17,8 @@ DB = {
 class AppManager:
 
     def create_user(self, email: str, password: str, name: str | None = None):
-        hashed_password = self._compile_password(password)
+        user_uuid = uuid.uuid4()
+        password_hash = self._compile_password(password, user_uuid)
 
         for user in DB["users"]:
             if user.email == email:
@@ -23,8 +26,8 @@ class AppManager:
 
         new_user = User(
             email=email,
-            password=hashed_password,
-            uuid=uuid.uuid4(),
+            password=password_hash,
+            uuid=user_uuid,
             name=name,
             events=[]
         )
@@ -43,8 +46,16 @@ class AppManager:
         )
         return EventManager(new_event)
 
-    def _compile_password(self, password: str):
-        ...
+    def _compile_password(self, password: str, salt: str):
+        password_hash = hashlib.pbkdf2_hmac('sha256', password.encode(), str(salt).encode(), 100_000)
+        return password_hash
+
+    def verify_password(self, p_hash: bytes, password: str, salt: str) -> bool:
+        """
+        Given a previously-stored salt and hash, and a password provided by a user
+        trying to log in, check whether the password is correct.
+        """
+        return compare_digest(p_hash, self._compile_password(password, salt))
 
     def list_users():
         ...
@@ -52,7 +63,7 @@ class AppManager:
     def login(self, email: str, password: str):
         for user in DB["users"]:
             if user.email == email:
-                if user.password == self._compile_password(password):
+                if self.verify_password(user.password, password, user.uuid):
                     access_token = secrets.token_hex
                     DB["tokens"][access_token] = user.uuid
                     return access_token
@@ -60,3 +71,6 @@ class AppManager:
                     raise ValueError("Wrong password")
         else:
             raise ValueError("User doesn't exists")
+
+    def list_events(self):
+        ...
